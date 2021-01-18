@@ -4,6 +4,7 @@ package com.its.springjwt.controllers;
 import com.its.springjwt.models.Category;
 import com.its.springjwt.models.User;
 import com.its.springjwt.models.Video;
+import com.its.springjwt.payload.response.MessageResponse;
 import com.its.springjwt.repository.CategoryRepository;
 import com.its.springjwt.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,14 @@ public class CategoryController {
     public List<Category> getCategories() {
         {
             return categoryRepo.findAll();
+        }
+    }
+
+    @GetMapping("/testresponse")
+    public ResponseEntity<String> testController()
+    {
+        {
+            return ResponseEntity.status(HttpStatus.OK).body("ok");
         }
     }
 
