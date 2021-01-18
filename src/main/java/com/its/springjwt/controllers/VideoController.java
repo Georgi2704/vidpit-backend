@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -181,6 +183,22 @@ public class VideoController {
         }
 
         //return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("cool message"));
+    }
+
+    @Transactional
+    @DeleteMapping("/videos/delete/{filename:.+}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @ResponseBody
+    public ResponseEntity<?> deleteFile(@PathVariable String filename) throws IOException {
+        //Resource file = storageService.load(filename);
+        try{
+            videoRepo.deleteByVideoContent(filename);
+            storageService.delete(filename, "video");
+        }
+        catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Video deleted successfully");
     }
 
 }
